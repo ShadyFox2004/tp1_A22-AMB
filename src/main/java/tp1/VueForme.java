@@ -41,6 +41,7 @@ public class VueForme {
     public Scene getScene() throws IOException {
         BorderPane root = new BorderPane();
         Pane top = doMakeTop();
+        Pane bottom = doMakeLeft();
 
         root.setTop(top);
 
@@ -48,17 +49,20 @@ public class VueForme {
         return scene;
     }
 
+    private Pane doMakeLeft() {
+        return null;
+    }
+
     private ImageView loadImage(String url, int largeur, int hauteur) throws FileNotFoundException {
         return new ImageView(new Image(new FileInputStream(url), largeur, hauteur,false,true));
     }
 
     /**
-     * @author Antoine-Matis Boudreau
      *
      * The main view is splited up into panes to avoid clogging the primary scene method.
      * This method locates the images making the top pane and loads them into a Pane.
      *
-     * @return the top pane
+     * @return the top pane@author Antoine-Matis Boudreau
      */
     private Pane doMakeTop() {
         Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
