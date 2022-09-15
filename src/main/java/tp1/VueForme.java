@@ -7,9 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -44,14 +42,13 @@ public class VueForme {
         root.setTop(top);
         File directory = new File("images fournies/image pour le dessus");
         System.out.println("directory = " + directory.getName());
-        File image[] = directory.listFiles();
-        for (int i = 0; i < image.length; i++) {
-            String url = image[i].getCanonicalPath();
-
-            System.out.println("url = " + url);
-
-            new ImageView(new Image(url, 10, 10,false,true));
-        }
+        Arrays.asList(directory.listFiles()).forEach(image -> {
+            try {
+                top.getChildren().add(loadImage(image.getCanonicalPath(), TOP_IMAGE_LARGEUR, TOP_IMAGE_HAUTEUR));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
 
 
@@ -59,7 +56,7 @@ public class VueForme {
         return scene;
     }
 
-    private ImageView loadImage(String url, int largeur, int hauteur) {
-        return new ImageView(new Image(url, largeur, hauteur,false,true));
+    private ImageView loadImage(String url, int largeur, int hauteur) throws FileNotFoundException {
+        return new ImageView(new Image(new FileInputStream(url), largeur, hauteur,false,true));
     }
 }
