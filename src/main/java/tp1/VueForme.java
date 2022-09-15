@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Vue pour le Tp1 sur les équations
@@ -37,20 +39,9 @@ public class VueForme {
 
     public Scene getScene() throws IOException {
         BorderPane root = new BorderPane();
-        Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
+        Pane top = doMakeTop();
 
         root.setTop(top);
-        File directory = new File("images fournies/image pour le dessus");
-        System.out.println("directory = " + directory.getName());
-        Arrays.asList(directory.listFiles()).forEach(image -> {
-            try {
-                top.getChildren().add(loadImage(image.getCanonicalPath(), TOP_IMAGE_LARGEUR, TOP_IMAGE_HAUTEUR));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-
 
         Scene scene = new Scene(root, LARGEUR_SCENE, HATEUR_SCENE);
         return scene;
@@ -58,5 +49,37 @@ public class VueForme {
 
     private ImageView loadImage(String url, int largeur, int hauteur) throws FileNotFoundException {
         return new ImageView(new Image(new FileInputStream(url), largeur, hauteur,false,true));
+    }
+
+    /**
+     * @author Antoine-Matis Boudreau
+     * The main view is splited up into panes to avoid clogging the primary scene method.
+     * This method locates the images making the top pane and loads them into a Pane.
+     *
+     * @return the top pane
+     */
+    private Pane doMakeTop() {
+        Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
+
+        Pattern imageExtensionPattern = Pattern.compile(".(jpeg|jpg|png)$");
+        // Filter images only
+
+        File directory = new File("images fournies/image pour le dessus");
+
+        assert directory != null;
+
+        Stream<File> images = Stream.of(directory.listFiles(file -> imageExtensionPattern.matcher(file.getName()).find()));
+
+        assert images != null; //is everything really ok?
+
+        images.forEach(image -> { // If it is alright, we proceed!
+            try {
+                top.getChildren().add(loadImage(image.getCanonicalPath(), TOP_IMAGE_LARGEUR, TOP_IMAGE_HAUTEUR));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return top;
     }
 }
