@@ -35,6 +35,7 @@ public class VueForme {
     public static final int EXPACEMENT_ENTRE_X_Y = 10;
     public static final int ESPACE_ENTRE_IMAGE_HAUT = 5;
     public static final double LARGEUR_MIN_SECTION_HAUT = 200.0;
+    private static final String TOP_IMAGE_PATH = "images fournies/image pour le dessus";
 
 
     public Scene getScene() throws IOException {
@@ -53,6 +54,7 @@ public class VueForme {
 
     /**
      * @author Antoine-Matis Boudreau
+     *
      * The main view is splited up into panes to avoid clogging the primary scene method.
      * This method locates the images making the top pane and loads them into a Pane.
      *
@@ -64,7 +66,7 @@ public class VueForme {
         Pattern imageExtensionPattern = Pattern.compile(".(jpeg|jpg|png)$");
         // Filter images only
 
-        File directory = new File("images fournies/image pour le dessus");
+        File directory = new File(TOP_IMAGE_PATH);
 
         assert directory != null;
 
