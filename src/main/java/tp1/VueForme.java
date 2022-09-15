@@ -7,10 +7,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Vue pour le Tp1 sur les équations
@@ -35,31 +35,53 @@ public class VueForme {
     public static final int EXPACEMENT_ENTRE_X_Y = 10;
     public static final int ESPACE_ENTRE_IMAGE_HAUT = 5;
     public static final double LARGEUR_MIN_SECTION_HAUT = 200.0;
+    private static final String TOP_IMAGE_PATH = "images fournies/image pour le dessus";
 
 
     public Scene getScene() throws IOException {
         BorderPane root = new BorderPane();
-        Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
+        Pane top = doMakeTop();
 
         root.setTop(top);
-        File directory = new File("images fournies/image pour le dessus");
-        System.out.println("directory = " + directory.getName());
-        File image[] = directory.listFiles();
-        for (int i = 0; i < image.length; i++) {
-            String url = image[i].getCanonicalPath();
-
-            System.out.println("url = " + url);
-
-            new ImageView(new Image(url, 10, 10,false,true));
-        }
-
-
 
         Scene scene = new Scene(root, LARGEUR_SCENE, HATEUR_SCENE);
         return scene;
     }
 
-    private ImageView loadImage(String url, int largeur, int hauteur) {
-        return new ImageView(new Image(url, largeur, hauteur,false,true));
+    private ImageView loadImage(String url, int largeur, int hauteur) throws FileNotFoundException {
+        return new ImageView(new Image(new FileInputStream(url), largeur, hauteur,false,true));
+    }
+
+    /**
+     * @author Antoine-Matis Boudreau
+     *
+     * The main view is splited up into panes to avoid clogging the primary scene method.
+     * This method locates the images making the top pane and loads them into a Pane.
+     *
+     * @return the top pane
+     */
+    private Pane doMakeTop() {
+        Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
+
+        Pattern imageExtensionPattern = Pattern.compile(".(jpeg|jpg|png)$");
+        // Filter images only
+
+        File directory = new File(TOP_IMAGE_PATH);
+
+        assert directory != null;
+
+        Stream<File> images = Stream.of(directory.listFiles(file -> imageExtensionPattern.matcher(file.getName()).find()));
+
+        assert images != null; //is everything really ok?
+
+        images.forEach(image -> { // If it is alright, we proceed!
+            try {
+                top.getChildren().add(loadImage(image.getCanonicalPath(), TOP_IMAGE_LARGEUR, TOP_IMAGE_HAUTEUR));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return top;
     }
 }
