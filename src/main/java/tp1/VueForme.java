@@ -2,13 +2,15 @@ package tp1;
 
 
 import javafx.scene.Scene;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * Vue pour le Tp1 sur les équations
@@ -35,9 +37,29 @@ public class VueForme {
     public static final double LARGEUR_MIN_SECTION_HAUT = 200.0;
 
 
-    public Scene getScene() {
+    public Scene getScene() throws IOException {
+        BorderPane root = new BorderPane();
+        Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
+
+        root.setTop(top);
+        File directory = new File("images fournies/image pour le dessus");
+        System.out.println("directory = " + directory.getName());
+        File image[] = directory.listFiles();
+        for (int i = 0; i < image.length; i++) {
+            String url = image[i].getCanonicalPath();
+
+            System.out.println("url = " + url);
+
+            new ImageView(new Image(url, 10, 10,false,true));
+        }
 
 
-        return null;
+
+        Scene scene = new Scene(root, LARGEUR_SCENE, HATEUR_SCENE);
+        return scene;
+    }
+
+    private ImageView loadImage(String url, int largeur, int hauteur) {
+        return new ImageView(new Image(url, largeur, hauteur,false,true));
     }
 }

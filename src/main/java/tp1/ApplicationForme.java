@@ -12,7 +12,6 @@ import javafx.stage.Stage;
  */
 public class ApplicationForme extends Application {
 	VueForme vue;
-
 	@Override
 	public void start(Stage stage) throws Exception {
 		// Instancier la vue
@@ -28,7 +27,10 @@ public class ApplicationForme extends Application {
 		stage.setMinHeight(scene.getHeight() + 25);
 		stage.setMinWidth(scene.getWidth() - 120);
 
-
+		stage.show();
 	}
 
+	public static void main(String[] args) {
+		launch();
+	}
 }
