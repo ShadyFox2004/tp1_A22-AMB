@@ -41,6 +41,9 @@ public class VueForme {
     public Scene getScene() throws IOException {
         BorderPane root = new BorderPane();
         Pane top = doMakeTop();
+        Pane left = doMakeLeft();
+
+        root.setLeft(left);
 
         root.setTop(top);
 
@@ -49,12 +52,10 @@ public class VueForme {
     }
 
     private ImageView loadImage(String url, int largeur, int hauteur) throws FileNotFoundException {
-        return new ImageView(new Image(new FileInputStream(url), largeur, hauteur,false,true));
+        return new ImageView(new Image(new FileInputStream(url), largeur, hauteur, false, true));
     }
 
     /**
-     * @author Antoine-Matis Boudreau
-     *
      * The main view is splited up into panes to avoid clogging the primary scene method.
      * This method locates the images making the top pane and loads them into a Pane.
      *
@@ -83,5 +84,36 @@ public class VueForme {
         });
 
         return top;
+    }
+
+    /**
+     * The main view is splited up into panes to avoid clogging the primary scene method.
+     * This method locates creates the left pane.
+     *
+     * @return the top pane
+     */
+    private Pane doMakeLeft() throws FileNotFoundException {
+        GridPane gridPane = new GridPane();
+
+        gridPane.setMaxSize(100, 250);
+
+        ImageView image1 = loadImage("images fournies/mage pour le côté gauche/science1.png", 50, 50);
+        GridPane.setConstraints(image1, 0, 0, 1, 1);
+
+        ImageView image2 = loadImage("images fournies/mage pour le côté gauche/science2.png", 50, 50);
+        GridPane.setConstraints(image2, 0, 1, 1, 1);
+
+        ImageView image3 = loadImage("images fournies/mage pour le côté gauche/science3.png", 50, 100);
+        GridPane.setConstraints(image3, 1, 0, 1, 2);
+
+        ImageView image4 = loadImage("images fournies/mage pour le côté gauche/science5.png", 100, 50);
+        GridPane.setConstraints(image4, 0, 2, 2, 1);
+
+        ImageView image5 = loadImage("images fournies/mage pour le côté gauche/science4.png", 100, 100);
+        GridPane.setConstraints(image5, 0, 3, 2, 2);
+
+        gridPane.getChildren().addAll(image1, image2, image3, image4, image5);
+
+        return gridPane;
     }
 }
