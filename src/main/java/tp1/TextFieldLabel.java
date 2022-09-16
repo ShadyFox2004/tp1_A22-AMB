@@ -12,16 +12,24 @@ import javafx.scene.layout.HBox;
 public class TextFieldLabel extends HBox {
 
     private TextField textField;
+    private Label label;
 
     public TextField getTextField() {
         return textField;
     }
 
+    public TextFieldLabel() {
+        this("");
+    }
+
     public TextFieldLabel(String s) {
         super();
         this.getChildren();
-        this.textField = new TextField(s);
-        this.getChildren().addAll(new Label(), textField);
+        
+        this.textField = new TextField();
+        this.label = new Label(s);
+
+        this.getChildren().addAll(label, textField);
     }
 
     /**
@@ -31,5 +39,12 @@ public class TextFieldLabel extends HBox {
      */
     public CharSequence getCharacthers() {
         return textField.getCharacters();
+    }
+
+    /**
+     * Set the new label text
+     */
+    public void setText(String label) {
+        this.label.setText(label);
     }
 }
