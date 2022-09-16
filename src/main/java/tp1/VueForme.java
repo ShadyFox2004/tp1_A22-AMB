@@ -1,14 +1,16 @@
 package tp1;
 
-
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.*;
-import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -16,12 +18,12 @@ import java.util.stream.Stream;
  * Vue pour le Tp1 sur les équations
  *
  * @author Martin Simoneau
- * version avec les équations
+ *         version avec les équations
  */
 public class VueForme {
 
     private final static Border BORDER = new Border(
-            new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null, null));
+            new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, new CornerRadii(23), BorderWidths.DEFAULT, null));
     public static final int NUMBER_OF_DATA = 5;
     public static final int LARGEUR_SCENE = 600;
     public static final int HATEUR_SCENE = 500;
@@ -37,15 +39,17 @@ public class VueForme {
     public static final double LARGEUR_MIN_SECTION_HAUT = 200.0;
     private static final String TOP_IMAGE_PATH = "images fournies/image pour le dessus";
 
-
     public Scene getScene() throws IOException {
         BorderPane root = new BorderPane();
         Pane top = doMakeTop();
         Pane left = doMakeLeft();
+        Pane right = doMakeRight();
 
         root.setLeft(left);
 
         root.setTop(top);
+        root.setRight(right);
+
 
         Scene scene = new Scene(root, LARGEUR_SCENE, HATEUR_SCENE);
         return scene;
@@ -56,8 +60,10 @@ public class VueForme {
     }
 
     /**
-     * The main view is splited up into panes to avoid clogging the primary scene method.
-     * This method locates the images making the top pane and loads them into a Pane.
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method.
+     * This method locates the images making the top pane and loads them into a
+     * Pane.
      *
      * @return the top pane
      */
@@ -71,9 +77,10 @@ public class VueForme {
 
         assert directory != null;
 
-        Stream<File> images = Stream.of(directory.listFiles(file -> imageExtensionPattern.matcher(file.getName()).find()));
+        Stream<File> images = Stream
+                .of(directory.listFiles(file -> imageExtensionPattern.matcher(file.getName()).find()));
 
-        assert images != null; //is everything really ok?
+        assert images != null; // is everything really ok?
 
         images.forEach(image -> { // If it is alright, we proceed!
             try {
@@ -87,7 +94,8 @@ public class VueForme {
     }
 
     /**
-     * The main view is splited up into panes to avoid clogging the primary scene method.
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method.
      * This method locates creates the left pane.
      *
      * @return the top pane
@@ -117,10 +125,50 @@ public class VueForme {
         return gridPane;
     }
 
-    private Pane doMakeRight() {
+    /**
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method.
+     * This method locates creates the right pane.
+     *
+     * @return the right pane
+     */
+    private VBox doMakeRight() {
+
+        TextFieldLabel x[] = new TextFieldLabel[NUMBER_OF_DATA];
+        TextFieldLabel y[] = new TextFieldLabel[NUMBER_OF_DATA];
+        
+        VBox right = new VBox();
+        right.setAlignment(Pos.CENTER);
+
         GridPane gridPane = new GridPane();
 
-        return gridPane;
-    }
+        gridPane.setHgap(EXPACEMENT_ENTRE_X_Y);
+        gridPane.setBorder(BORDER);
 
+        right.setBackground(Background.fill(Color.DARKGRAY));
+        right.getChildren().add(gridPane);
+
+        Button boutonAjouterGraph = new Button("Ajoutez un graphique");
+        Button boutonEffacerGraph = new Button("Effacer les graphiques");
+
+        for (int i = 0; i < NUMBER_OF_DATA; i++) {
+            x[i] = new TextFieldLabel("x" + i);
+            GridPane.setConstraints(x[i], 0, i);
+
+            y[i] = new TextFieldLabel("y" + i);           
+            GridPane.setConstraints(y[i], 1, i);
+            
+            gridPane.getChildren().addAll(x[i],y[i]);
+        }
+
+        GridPane.setHalignment(boutonAjouterGraph, HPos.CENTER);
+        GridPane.setHalignment(boutonEffacerGraph, HPos.CENTER);
+
+        gridPane.add(boutonAjouterGraph, 0, NUMBER_OF_DATA, 2,1);
+        gridPane.add(boutonEffacerGraph, 0, NUMBER_OF_DATA+1, 2,1);
+        
+        gridPane.setPadding(new Insets(20, 10, 20, 20));
+
+        return right;
+    }
 }
