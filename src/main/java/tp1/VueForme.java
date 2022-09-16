@@ -116,4 +116,11 @@ public class VueForme {
 
         return gridPane;
     }
+
+    private Pane doMakeRight() {
+        GridPane gridPane = new GridPane();
+
+        return gridPane;
+    }
+
 }
