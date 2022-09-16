@@ -1,6 +1,7 @@
 package tp1;
 
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -23,7 +24,7 @@ import java.util.stream.Stream;
 public class VueForme {
 
     private final static Border BORDER = new Border(
-            new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, new CornerRadii(23), new BorderWidths(10), null));
+            new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, new CornerRadii(23), BorderWidths.DEFAULT, null));
     public static final int NUMBER_OF_DATA = 5;
     public static final int LARGEUR_SCENE = 600;
     public static final int HATEUR_SCENE = 500;
@@ -138,13 +139,16 @@ public class VueForme {
         TextFieldLabel y[] = new TextFieldLabel[NUMBER_OF_DATA];
         
         VBox right = new VBox();
+        right.setAlignment(Pos.CENTER);
+
         GridPane gridPane = new GridPane();
+
+        gridPane.setHgap(EXPACEMENT_ENTRE_X_Y);
         gridPane.setBorder(BORDER);
 
         right.setBackground(Background.fill(Color.DARKGRAY));
         right.getChildren().add(gridPane);
 
-        TextFieldLabel textFieldLabel = new TextFieldLabel("");
         Button boutonAjouterGraph = new Button("Ajoutez un graphique");
         Button boutonEffacerGraph = new Button("Effacer les graphiques");
 
@@ -163,6 +167,8 @@ public class VueForme {
 
         gridPane.add(boutonAjouterGraph, 0, NUMBER_OF_DATA, 2,1);
         gridPane.add(boutonEffacerGraph, 0, NUMBER_OF_DATA+1, 2,1);
+        
+        gridPane.setPadding(new Insets(20, 10, 20, 20));
 
         return right;
     }
