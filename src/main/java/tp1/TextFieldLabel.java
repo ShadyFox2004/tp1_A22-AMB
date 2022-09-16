@@ -4,9 +4,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
+/**
+ * Create the text field and the label.
+ * @author Antoine-Matis Boudreau
+ */
+
 public class TextFieldLabel extends HBox {
 
     private TextField textField;
+
+    public TextField getTextField() {
+        return textField;
+    }
 
     public TextFieldLabel(String s) {
         super();
