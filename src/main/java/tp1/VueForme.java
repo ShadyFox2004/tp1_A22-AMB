@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -154,12 +155,15 @@ public class VueForme {
         Button boutonEffacerGraph = new Button("Effacer les graphiques");
 
         for (int i = 0; i < NUMBER_OF_DATA; i++) {
-            x[i] = new TextFieldLabel("x" + i);
+            x[i] = new TextFieldLabel("x" + i + "  ");
             GridPane.setConstraints(x[i], 0, i);
+            x[i].setPadding(new Insets(0, 5, 5, 5));
 
-            y[i] = new TextFieldLabel("y" + i);           
+
+            y[i] = new TextFieldLabel("y" + i + "  ");
             GridPane.setConstraints(y[i], 1, i);
-            
+            y[i].setPadding(new Insets(0, 5, 5, 5));
+
             gridPane.getChildren().addAll(x[i],y[i]);
         }
 
