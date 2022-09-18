@@ -44,12 +44,12 @@ public class VueForme {
         Pane top = doMakeTop();
         Pane left = doMakeLeft();
         Pane right = doMakeRight();
+        Pane bottom = doMakeBottom();
 
         root.setLeft(left);
-
         root.setTop(top);
         root.setRight(right);
-
+        root.setBottom(bottom);
 
         Scene scene = new Scene(root, LARGEUR_SCENE, HATEUR_SCENE);
         return scene;
@@ -131,15 +131,15 @@ public class VueForme {
     /**
      * The main view is splited up into panes to avoid clogging the primary scene
      * method.
-     * This method locates creates the right pane.
+     * This method locates creates the right VBox.
      *
-     * @return the right pane
+     * @return the right VBox
      */
     private VBox doMakeRight() {
 
         TextFieldLabel x[] = new TextFieldLabel[NUMBER_OF_DATA];
         TextFieldLabel y[] = new TextFieldLabel[NUMBER_OF_DATA];
-        
+
         VBox right = new VBox();
         right.setAlignment(Pos.CENTER);
 
@@ -174,4 +174,48 @@ public class VueForme {
 
         return right;
     }
+
+    /**
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method.
+     * This method locates creates the Bottom HBox.
+     *
+     * @return the bottom HBox
+     */
+    private HBox doMakeBottom() {
+        HBox bottom = new HBox();
+
+        Button genere = new Button("Générer");
+        Button reinitialiser = new Button("Réinitialiser");
+        Button quitter = new Button("Quitter");
+
+        genere.setPrefWidth(125);
+        genere.setMinWidth(125);
+        genere.setMaxWidth(500);
+
+        reinitialiser.setPrefWidth(125);
+        reinitialiser.setMinWidth(125);
+        reinitialiser.setMaxWidth(500);
+
+        quitter.setPrefWidth(65);
+        quitter.setMinWidth(65);
+        quitter.setMaxWidth(400);
+
+        bottom.getChildren().addAll(genere,reinitialiser,quitter);
+
+        HBox.setHgrow(genere, Priority.ALWAYS);
+        HBox.setHgrow(reinitialiser, Priority.ALWAYS);
+        HBox.setHgrow(quitter, Priority.SOMETIMES);
+
+        bottom.setAlignment(Pos.BOTTOM_CENTER);
+        bottom.setSpacing(ESPACE_ENTRE_BOUTONS_BAS);
+
+        Border bottomBorder = new Border(
+                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, BorderWidths.DEFAULT, null));
+
+        bottom.setBorder(bottomBorder);
+
+        return bottom;
+    }
+
 }
