@@ -69,6 +69,8 @@ public class VueForme {
      */
     private Pane doMakeTop() {
         Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
+        top.setMinWidth(10); // Francois Marchand
+        top.setMaxWidth(4000);
 
         Pattern imageExtensionPattern = Pattern.compile(".(jpeg|jpg|png)$");
         // Filter images only
