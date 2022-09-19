@@ -8,8 +8,15 @@ import java.util.List;
 public class Grapher {
 
     public XYChart.Series<Number, Number> createGraph(Parameters params) {
+        XYChart.Series xyChart = new XYChart.Series();
 
-        return null;
+        xyChart.setName(params.name);
+
+        for (int i = 0; i < params.xList.size(); i++) {
+            xyChart.getData().add(new XYChart.Data(params.xList.get(i),params.yList.get(i)));
+        }
+
+        return xyChart;
     }
 
     public static class Parameters {
