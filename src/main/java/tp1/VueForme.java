@@ -136,7 +136,6 @@ public class VueForme {
      * @return the right VBox
      */
     private VBox doMakeRight() {
-
         TextFieldLabel x[] = new TextFieldLabel[NUMBER_OF_DATA];
         TextFieldLabel y[] = new TextFieldLabel[NUMBER_OF_DATA];
 
@@ -158,11 +157,12 @@ public class VueForme {
             x[i] = new TextFieldLabel("x" + i + "  ");
             GridPane.setConstraints(x[i], 0, i);
             x[i].setPadding(new Insets(0, 5, 5, 5));
-
+            x[i].getTextField().setPrefWidth(35);
 
             y[i] = new TextFieldLabel("y" + i + "  ");
             GridPane.setConstraints(y[i], 1, i);
             y[i].setPadding(new Insets(0, 5, 5, 5));
+            y[i].getTextField().setPrefWidth(35);
 
             gridPane.getChildren().addAll(x[i],y[i]);
         }

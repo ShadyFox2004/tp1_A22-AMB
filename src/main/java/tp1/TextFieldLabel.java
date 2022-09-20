@@ -13,7 +13,6 @@ public class TextFieldLabel extends HBox {
 
     private TextField textField;
     private Label label;
-    private int nbPixel;
 
     public TextField getTextField() {
         return textField;
@@ -29,9 +28,6 @@ public class TextFieldLabel extends HBox {
         
         this.textField = new TextField();
         this.label = new Label(s);
-        this.nbPixel = 40;
-
-        textField.setPrefWidth(this.nbPixel);
 
         this.getChildren().addAll(label, textField);
     }
