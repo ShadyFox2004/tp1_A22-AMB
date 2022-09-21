@@ -41,6 +41,10 @@ public class TextFieldLabel extends HBox {
         return textField.getCharacters();
     }
 
+    public Double getDouble() {
+        return Double.parseDouble(textField.getText());
+    }
+
     /**
      * Set the new label text
      */

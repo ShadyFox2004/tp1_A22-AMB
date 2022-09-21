@@ -1,17 +1,23 @@
 package tp1;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.*;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -40,17 +46,31 @@ public class VueForme {
     public static final double LARGEUR_MIN_SECTION_HAUT = 200.0;
     private static final String TOP_IMAGE_PATH = "images fournies/image pour le dessus";
 
+    public static final Button genere = new Button("Générer");
+    public static final Button reinitialiser = new Button("Réinitialiser");
+    public static final Button quitter = new Button("Quitter");
+    public static final Button boutonAjouterGraph = new Button("Ajoutez un graphique");
+    public static final Button boutonEffacerGraph = new Button("Effacer les graphiques");
+
+    public static final TilePane center = new TilePane();
+//    public static LineChart<Number,Number> lineChart = null;
+
+    public List<Double> xList = null;
+    public List<Double> yList = null;
+
     public Scene getScene() throws IOException {
         BorderPane root = new BorderPane();
         Pane top = doMakeTop();
         Pane left = doMakeLeft();
         Pane right = doMakeRight();
         Pane bottom = doMakeBottom();
+        Pane center = this.center;
 
         root.setLeft(left);
         root.setTop(top);
         root.setRight(right);
         root.setBottom(bottom);
+        root.setCenter(center);
 
         Scene scene = new Scene(root, LARGEUR_SCENE, HATEUR_SCENE);
         return scene;
@@ -139,8 +159,18 @@ public class VueForme {
         TextFieldLabel x[] = new TextFieldLabel[NUMBER_OF_DATA];
         TextFieldLabel y[] = new TextFieldLabel[NUMBER_OF_DATA];
 
-        VBox right = new VBox();
+        Label auteurs = new Label("Auteurs");
+        TextArea nomAuteurs1 = new TextArea("Antoine-Matis Boudreau" + "\n" + "Francois Marchand");
+
+        VBox right = new VBox(20);
         right.setAlignment(Pos.CENTER);
+
+        right.getChildren().addAll(auteurs,nomAuteurs1);
+
+        nomAuteurs1.setPrefSize(100,70);
+        nomAuteurs1.setEditable(false);
+        right.setBorder(new Border(
+                new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, null, new BorderWidths(1,20,1,20), null)));
 
         GridPane gridPane = new GridPane();
 
@@ -150,8 +180,7 @@ public class VueForme {
         right.setBackground(Background.fill(Color.DARKGRAY));
         right.getChildren().add(gridPane);
 
-        Button boutonAjouterGraph = new Button("Ajoutez un graphique");
-        Button boutonEffacerGraph = new Button("Effacer les graphiques");
+
 
         for (int i = 0; i < NUMBER_OF_DATA; i++) {
             x[i] = new TextFieldLabel("x" + i + "  ");
@@ -159,10 +188,12 @@ public class VueForme {
             x[i].setPadding(new Insets(0, 5, 5, 5));
             x[i].getTextField().setPrefWidth(35);
 
+
             y[i] = new TextFieldLabel("y" + i + "  ");
             GridPane.setConstraints(y[i], 1, i);
             y[i].setPadding(new Insets(0, 5, 5, 5));
             y[i].getTextField().setPrefWidth(35);
+
 
             gridPane.getChildren().addAll(x[i],y[i]);
         }
@@ -174,6 +205,10 @@ public class VueForme {
         gridPane.add(boutonEffacerGraph, 0, NUMBER_OF_DATA+1, 2,1);
         
         gridPane.setPadding(new Insets(20, 10, 20, 20));
+
+//        Grapher.Parameters parameters = new Grapher.Parameters(xList,yList,"1");
+//
+//        lineChart = Grapher.createGraph(parameters);
 
         return right;
     }
@@ -188,21 +223,11 @@ public class VueForme {
     private HBox doMakeBottom() {
         HBox bottom = new HBox();
 
-        Button genere = new Button("Générer");
-        Button reinitialiser = new Button("Réinitialiser");
-        Button quitter = new Button("Quitter");
+        setWidth(genere,125,125,500);
 
-        genere.setPrefWidth(125);
-        genere.setMinWidth(125);
-        genere.setMaxWidth(500);
+        setWidth(reinitialiser,125,125,500);
 
-        reinitialiser.setPrefWidth(125);
-        reinitialiser.setMinWidth(125);
-        reinitialiser.setMaxWidth(500);
-
-        quitter.setPrefWidth(65);
-        quitter.setMinWidth(65);
-        quitter.setMaxWidth(400);
+        setWidth(quitter,65,65,400);
 
         bottom.getChildren().addAll(genere,reinitialiser,quitter);
 
@@ -221,4 +246,9 @@ public class VueForme {
         return bottom;
     }
 
+    public void setWidth(Button boutton,double pref,double min, double max){
+        boutton.setPrefWidth(pref);
+        boutton.setMinWidth(min);
+        boutton.setMaxWidth(max);
+    }
 }
