@@ -1,5 +1,6 @@
 package tp1;
 
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -7,16 +8,21 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -52,11 +58,8 @@ public class VueForme {
     public static final Button boutonAjouterGraph = new Button("Ajoutez un graphique");
     public static final Button boutonEffacerGraph = new Button("Effacer les graphiques");
 
-    public static final TilePane center = new TilePane();
-//    public static LineChart<Number,Number> lineChart = null;
-
-    public List<Double> xList = null;
-    public List<Double> yList = null;
+    private TextFieldLabel x[];
+    private TextFieldLabel y[];
 
     public Scene getScene() throws IOException {
         BorderPane root = new BorderPane();
@@ -64,7 +67,7 @@ public class VueForme {
         Pane left = doMakeLeft();
         Pane right = doMakeRight();
         Pane bottom = doMakeBottom();
-        Pane center = this.center;
+        Pane center = doMakeCenter();
 
         root.setLeft(left);
         root.setTop(top);
@@ -73,6 +76,7 @@ public class VueForme {
         root.setCenter(center);
 
         Scene scene = new Scene(root, LARGEUR_SCENE, HATEUR_SCENE);
+
         return scene;
     }
 
@@ -90,7 +94,7 @@ public class VueForme {
      */
     private Pane doMakeTop() {
         Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
-        top.setMinWidth(10); // Francois Marchand
+        top.setMinWidth(LARGEUR_MIN_SECTION_HAUT); // Francois Marchand
         top.setMaxWidth(4000);
 
         Pattern imageExtensionPattern = Pattern.compile(".(jpeg|jpg|png)$");
@@ -156,11 +160,11 @@ public class VueForme {
      * @return the right VBox
      */
     private VBox doMakeRight() {
-        TextFieldLabel x[] = new TextFieldLabel[NUMBER_OF_DATA];
-        TextFieldLabel y[] = new TextFieldLabel[NUMBER_OF_DATA];
+        x = new TextFieldLabel[NUMBER_OF_DATA];
+        y = new TextFieldLabel[NUMBER_OF_DATA];
 
         Label auteurs = new Label("Auteurs");
-        TextArea nomAuteurs1 = new TextArea("Antoine-Matis Boudreau" + "\n" + "Francois Marchand");
+        TextArea nomAuteurs1 = new TextArea("Antoine-Matis Boudreau" + System.lineSeparator() + "Francois Marchand");
 
         VBox right = new VBox(20);
         right.setAlignment(Pos.CENTER);
@@ -180,16 +184,16 @@ public class VueForme {
         right.setBackground(Background.fill(Color.DARKGRAY));
         right.getChildren().add(gridPane);
 
-
-
         for (int i = 0; i < NUMBER_OF_DATA; i++) {
             x[i] = new TextFieldLabel("x" + i + "  ");
+            x[i].getTextField().setMinWidth(LARGEUR_MIN_TEXTFIELD_DONNEES);
             GridPane.setConstraints(x[i], 0, i);
             x[i].setPadding(new Insets(0, 5, 5, 5));
             x[i].getTextField().setPrefWidth(35);
 
 
             y[i] = new TextFieldLabel("y" + i + "  ");
+            y[i].getTextField().setMinWidth(LARGEUR_MIN_TEXTFIELD_DONNEES);
             GridPane.setConstraints(y[i], 1, i);
             y[i].setPadding(new Insets(0, 5, 5, 5));
             y[i].getTextField().setPrefWidth(35);
@@ -205,10 +209,6 @@ public class VueForme {
         gridPane.add(boutonEffacerGraph, 0, NUMBER_OF_DATA+1, 2,1);
         
         gridPane.setPadding(new Insets(20, 10, 20, 20));
-
-//        Grapher.Parameters parameters = new Grapher.Parameters(xList,yList,"1");
-//
-//        lineChart = Grapher.createGraph(parameters);
 
         return right;
     }
@@ -246,7 +246,35 @@ public class VueForme {
         return bottom;
     }
 
-    public void setWidth(Button boutton,double pref,double min, double max){
+    private Pane doMakeCenter() {
+        TilePane center = new TilePane();
+
+        boutonAjouterGraph.setOnMouseClicked(event -> {
+            Grapher grapher = new Grapher();
+            List<Double> xlist = new ArrayList<>();
+            List<Double> ylist = new ArrayList<>();
+
+            for (int i = 0; i < NUMBER_OF_DATA; i++) {
+                xlist.add(x[i].getDouble());
+                ylist.add(y[i].getDouble());
+            }
+
+            final NumberAxis xAxis = new NumberAxis();
+            xAxis.setLabel("x");
+            final NumberAxis yAxis = new NumberAxis();
+            yAxis.setLabel("y");
+
+            LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+            lineChart.getData().add(grapher.createGraph(new Grapher.Parameters(xlist, ylist, null)));
+            lineChart.setLegendVisible(false);
+
+            center.getChildren().add(lineChart);
+        });
+
+        return center;
+    }
+
+    private void setWidth(Button boutton,double pref,double min, double max){
         boutton.setPrefWidth(pref);
         boutton.setMinWidth(min);
         boutton.setMaxWidth(max);
