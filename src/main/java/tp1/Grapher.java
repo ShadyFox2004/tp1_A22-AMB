@@ -7,13 +7,20 @@ import java.util.List;
 
 public class Grapher {
 
+    /**
+     * creates a series using the data provided.
+     * @Francois-Marchand
+     * @Antoine-Matis_Boudreau
+     * @param params
+     * @return the Series data
+     */
     public XYChart.Series<Number, Number> createGraph(Parameters params) {
-        XYChart.Series xyChart = new XYChart.Series();
+        XYChart.Series<Number,Number> xyChart = new XYChart.Series<Number,Number>();
 
         xyChart.setName(params.name);
 
         for (int i = 0; i < params.xList.size(); i++) {
-            xyChart.getData().add(new XYChart.Data(params.xList.get(i),params.yList.get(i)));
+            xyChart.getData().add(new XYChart.Data<Number,Number>(params.xList.get(i),params.yList.get(i)));
         }
 
         return xyChart;
@@ -21,22 +28,21 @@ public class Grapher {
 
     public static class Parameters {
 
-        private List<Double> xList;
-        private List<Double> yList;
+        private List<Number> xList;
+        private List<Number> yList;
         private final String name;
 
-
-        public Parameters(List<Double> xList, List<Double> yList, String name) {
+        public Parameters(List<Number> xList, List<Number> yList, String name) {
             this.xList = xList;
             this.yList = yList;
             this.name = name;
         }
 
-        public List<Double> getxList() {
-            return xList;
+        public List<Number> getxList() {
+            return xList.stream().toList();
         }
 
-        public List<Double> getyList() {
+        public List<Number> getyList() {
             return yList;
         }
 
