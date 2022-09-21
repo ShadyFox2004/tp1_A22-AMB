@@ -4,11 +4,11 @@ import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
-import static tp1.VueForme.*;
 
 /**
  * Contrôleur pour le Tp1
@@ -33,8 +33,8 @@ public class ApplicationForme extends Application {
 		stage.setMinHeight(scene.getHeight() + 25);
 		stage.setMinWidth(scene.getWidth() - 120);
 
-		associeDialogAuxBoutons(genere,reinitialiser,quitter);
-		ajouterUnGrapique(boutonAjouterGraph);
+		associeDialogAuxBoutons(vue.getBoutonGenere(), vue.getReinitialiser(), vue.getQuitter());
+		ajouterUnGrapique(vue.getBoutonAjouterGraph());
 
 		stage.show();
 	}
@@ -57,13 +57,24 @@ public class ApplicationForme extends Application {
 		}
 	}
 
-	private void addGraph(){
-//		center.getChildren().add(lineChart);
+	private void addGraph() {
+		Grapher grapher = new Grapher();
+
+		final NumberAxis xAxis = new NumberAxis();
+		xAxis.setLabel("x");
+		final NumberAxis yAxis = new NumberAxis();
+		yAxis.setLabel("y");
+
+		LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+		lineChart.getData().add(grapher.createGraph(new Grapher.Parameters(vue.getX(), vue.getY(), null)));
+		lineChart.setLegendVisible(false);
+
+		vue.getCenter().getChildren().add(lineChart);
 	}
 
 	public class InnerAction implements EventHandler {
 
-		private String headerText = "Vos Noms";
+		private String headerText = "Antoine-Matis Boudreau" + System.lineSeparator() + "Francois Marchand";
 		private String titre = "TP1 420-203 A22";
 
 		@Override

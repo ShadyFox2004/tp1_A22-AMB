@@ -1,21 +1,12 @@
 package tp1;
 
-import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.chart.Axis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -30,8 +21,10 @@ import java.util.stream.Stream;
 /**
  * Vue pour le Tp1 sur les équations
  *
- * @author Martin Simoneau
- *         version avec les équations
+ * @author Antoine-Matis Boudreau
+ * @author Francois Marchand
+ * <p>
+ * version avec les équations
  */
 public class VueForme {
 
@@ -51,23 +44,74 @@ public class VueForme {
     public static final int ESPACE_ENTRE_IMAGE_HAUT = 5;
     public static final double LARGEUR_MIN_SECTION_HAUT = 200.0;
     private static final String TOP_IMAGE_PATH = "images fournies/image pour le dessus";
+    private Button genere = new Button("Générer");
+    private Button reinitialiser = new Button("Réinitialiser");
+    private Button quitter = new Button("Quitter");
+    private Button boutonAjouterGraph = new Button("Ajoutez un graphique");
+    private Button boutonEffacerGraph = new Button("Effacer les graphiques");
+    private Pane top;
+    private Pane right;
+    private Pane center;
+    private Pane left;
+    private Pane bottom;
+    private List<TextFieldLabel> x;
+    private List<TextFieldLabel> y;
 
-    public static final Button genere = new Button("Générer");
-    public static final Button reinitialiser = new Button("Réinitialiser");
-    public static final Button quitter = new Button("Quitter");
-    public static final Button boutonAjouterGraph = new Button("Ajoutez un graphique");
-    public static final Button boutonEffacerGraph = new Button("Effacer les graphiques");
 
-    private TextFieldLabel x[];
-    private TextFieldLabel y[];
+    public Button getBoutonGenere() {
+        return this.genere;
+    }
+
+    public Button getReinitialiser() {
+        return this.reinitialiser;
+    }
+
+    public Button getQuitter() {
+        return this.quitter;
+    }
+
+    public Button getBoutonAjouterGraph() {
+        return this.boutonAjouterGraph;
+    }
+
+    public Button getBoutonEffacerGraph() {
+        return this.boutonEffacerGraph;
+    }
+
+    /**
+     * @return the center pane
+     * @author Antoine-Matis
+     */
+    public Pane getCenter() {
+        return center;
+    }
+
+    public List<Number> getX() {
+        List<Number> x = new ArrayList<Number>();
+        this.x.forEach(textFieldLabel -> x.add(textFieldLabel.getDouble()));
+        return x;
+    }
+
+    /**
+     * get the data in
+     *
+     * @return
+     */
+    public List<Number> getY() {
+        List<Number> y = new ArrayList<Number>();
+        this.y.forEach(textFieldLabel -> y.add(textFieldLabel.getDouble()));
+        return y;
+    }
+
 
     public Scene getScene() throws IOException {
         BorderPane root = new BorderPane();
-        Pane top = doMakeTop();
-        Pane left = doMakeLeft();
-        Pane right = doMakeRight();
-        Pane bottom = doMakeBottom();
-        Pane center = doMakeCenter();
+
+        doMakeTop();
+        doMakeLeft();
+        doMakeRight();
+        doMakeBottom();
+        doMakeCenter();
 
         root.setLeft(left);
         root.setTop(top);
@@ -92,8 +136,8 @@ public class VueForme {
      *
      * @return the top pane
      */
-    private Pane doMakeTop() {
-        Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
+    private void doMakeTop() {
+        HBox top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
         top.setMinWidth(LARGEUR_MIN_SECTION_HAUT); // Francois Marchand
         top.setMaxWidth(4000);
 
@@ -117,7 +161,7 @@ public class VueForme {
             }
         });
 
-        return top;
+        this.top = top;
     }
 
     /**
@@ -127,29 +171,27 @@ public class VueForme {
      *
      * @return the top pane
      */
-    private Pane doMakeLeft() throws FileNotFoundException {
+    private void doMakeLeft() throws FileNotFoundException {
         GridPane gridPane = new GridPane();
 
         gridPane.setMaxSize(100, 250);
 
         ImageView image1 = loadImage("images fournies/mage pour le côté gauche/science1.png", 50, 50);
-        GridPane.setConstraints(image1, 0, 0, 1, 1);
+        gridPane.add(image1, 0, 0, 1, 1);
 
         ImageView image2 = loadImage("images fournies/mage pour le côté gauche/science2.png", 50, 50);
-        GridPane.setConstraints(image2, 0, 1, 1, 1);
+        gridPane.add(image2, 0, 1, 1, 1);
 
         ImageView image3 = loadImage("images fournies/mage pour le côté gauche/science3.png", 50, 100);
-        GridPane.setConstraints(image3, 1, 0, 1, 2);
+        gridPane.add(image3, 1, 0, 1, 2);
 
         ImageView image4 = loadImage("images fournies/mage pour le côté gauche/science5.png", 100, 50);
-        GridPane.setConstraints(image4, 0, 2, 2, 1);
+        gridPane.add(image4, 0, 2, 2, 1);
 
         ImageView image5 = loadImage("images fournies/mage pour le côté gauche/science4.png", 100, 100);
-        GridPane.setConstraints(image5, 0, 3, 2, 2);
+        gridPane.add(image5, 0, 3, 2, 2);
 
-        gridPane.getChildren().addAll(image1, image2, image3, image4, image5);
-
-        return gridPane;
+        this.left = gridPane;
     }
 
     /**
@@ -159,22 +201,21 @@ public class VueForme {
      *
      * @return the right VBox
      */
-    private VBox doMakeRight() {
-        x = new TextFieldLabel[NUMBER_OF_DATA];
-        y = new TextFieldLabel[NUMBER_OF_DATA];
-
+    private void doMakeRight() {
+        x = new ArrayList<>(NUMBER_OF_DATA);
+        y = new ArrayList<>(NUMBER_OF_DATA);
         Label auteurs = new Label("Auteurs");
         TextArea nomAuteurs1 = new TextArea("Antoine-Matis Boudreau" + System.lineSeparator() + "Francois Marchand");
 
         VBox right = new VBox(20);
         right.setAlignment(Pos.CENTER);
 
-        right.getChildren().addAll(auteurs,nomAuteurs1);
-
-        nomAuteurs1.setPrefSize(100,70);
+        right.getChildren().addAll(auteurs, nomAuteurs1);
+        nomAuteurs1.setPrefSize(100, 70);
         nomAuteurs1.setEditable(false);
+
         right.setBorder(new Border(
-                new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, null, new BorderWidths(1,20,1,20), null)));
+                new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, null, new BorderWidths(1, 20, 1, 20), null)));
 
         GridPane gridPane = new GridPane();
 
@@ -184,34 +225,35 @@ public class VueForme {
         right.setBackground(Background.fill(Color.DARKGRAY));
         right.getChildren().add(gridPane);
 
+
         for (int i = 0; i < NUMBER_OF_DATA; i++) {
-            x[i] = new TextFieldLabel("x" + i + "  ");
-            x[i].getTextField().setMinWidth(LARGEUR_MIN_TEXTFIELD_DONNEES);
-            GridPane.setConstraints(x[i], 0, i);
-            x[i].setPadding(new Insets(0, 5, 5, 5));
-            x[i].getTextField().setPrefWidth(35);
+            x.add(i, new TextFieldLabel("x" + i + "  "));
+            x.get(i).getTextField().setMinWidth(LARGEUR_MIN_TEXTFIELD_DONNEES);
+            GridPane.setConstraints(x.get(i), 0, i);
+            x.get(i).setPadding(new Insets(0, 5, 5, 5));
+            x.get(i).getTextField().setPrefWidth(35);
 
 
-            y[i] = new TextFieldLabel("y" + i + "  ");
-            y[i].getTextField().setMinWidth(LARGEUR_MIN_TEXTFIELD_DONNEES);
-            GridPane.setConstraints(y[i], 1, i);
-            y[i].setPadding(new Insets(0, 5, 5, 5));
-            y[i].getTextField().setPrefWidth(35);
+            y.add(i, new TextFieldLabel("y" + i + "  "));
+            y.get(i).getTextField().setMinWidth(LARGEUR_MIN_TEXTFIELD_DONNEES);
+            GridPane.setConstraints(y.get(i), 1, i);
+            y.get(i).setPadding(new Insets(0, 5, 5, 5));
+            y.get(i).getTextField().setPrefWidth(35);
 
-
-            gridPane.getChildren().addAll(x[i],y[i]);
+            gridPane.getChildren().addAll(x.get(i), y.get(i));
         }
 
         GridPane.setHalignment(boutonAjouterGraph, HPos.CENTER);
         GridPane.setHalignment(boutonEffacerGraph, HPos.CENTER);
 
-        gridPane.add(boutonAjouterGraph, 0, NUMBER_OF_DATA, 2,1);
-        gridPane.add(boutonEffacerGraph, 0, NUMBER_OF_DATA+1, 2,1);
-        
+        gridPane.add(boutonAjouterGraph, 0, NUMBER_OF_DATA, 2, 1);
+        gridPane.add(boutonEffacerGraph, 0, NUMBER_OF_DATA + 1, 2, 1);
+
         gridPane.setPadding(new Insets(20, 10, 20, 20));
 
-        return right;
+        this.right = right;
     }
+
 
     /**
      * The main view is splited up into panes to avoid clogging the primary scene
@@ -220,16 +262,16 @@ public class VueForme {
      *
      * @return the bottom HBox
      */
-    private HBox doMakeBottom() {
+    private void doMakeBottom() {
         HBox bottom = new HBox();
 
-        setWidth(genere,125,125,500);
+        setWidth(genere, 125, 125, 500);
 
-        setWidth(reinitialiser,125,125,500);
+        setWidth(reinitialiser, 125, 125, 500);
 
-        setWidth(quitter,65,65,400);
+        setWidth(quitter, 65, 65, 400);
 
-        bottom.getChildren().addAll(genere,reinitialiser,quitter);
+        bottom.getChildren().addAll(genere, reinitialiser, quitter);
 
         HBox.setHgrow(genere, Priority.ALWAYS);
         HBox.setHgrow(reinitialiser, Priority.ALWAYS);
@@ -243,38 +285,15 @@ public class VueForme {
 
         bottom.setBorder(bottomBorder);
 
-        return bottom;
+        this.bottom = bottom;
     }
 
-    private Pane doMakeCenter() {
-        TilePane center = new TilePane();
 
-        boutonAjouterGraph.setOnMouseClicked(event -> {
-            Grapher grapher = new Grapher();
-            List<Double> xlist = new ArrayList<>();
-            List<Double> ylist = new ArrayList<>();
-
-            for (int i = 0; i < NUMBER_OF_DATA; i++) {
-                xlist.add(x[i].getDouble());
-                ylist.add(y[i].getDouble());
-            }
-
-            final NumberAxis xAxis = new NumberAxis();
-            xAxis.setLabel("x");
-            final NumberAxis yAxis = new NumberAxis();
-            yAxis.setLabel("y");
-
-            LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
-            lineChart.getData().add(grapher.createGraph(new Grapher.Parameters(xlist, ylist, null)));
-            lineChart.setLegendVisible(false);
-
-            center.getChildren().add(lineChart);
-        });
-
-        return center;
+    private void doMakeCenter() {
+        this.center = new TilePane();
     }
 
-    private void setWidth(Button boutton,double pref,double min, double max){
+    private void setWidth(Button boutton, double pref, double min, double max) {
         boutton.setPrefWidth(pref);
         boutton.setMinWidth(min);
         boutton.setMaxWidth(max);

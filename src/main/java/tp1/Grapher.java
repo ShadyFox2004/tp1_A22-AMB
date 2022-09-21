@@ -21,22 +21,22 @@ public class Grapher {
 
     public static class Parameters {
 
-        private List<Double> xList;
-        private List<Double> yList;
+        private List<Number> xList;
+        private List<Number> yList;
         private final String name;
 
 
-        public Parameters(List<Double> xList, List<Double> yList, String name) {
+        public Parameters(List<Number> xList, List<Number> yList, String name) {
             this.xList = xList;
             this.yList = yList;
             this.name = name;
         }
 
-        public List<Double> getxList() {
-            return xList;
+        public List<Number> getxList() {
+            return xList.stream().toList();
         }
 
-        public List<Double> getyList() {
+        public List<Number> getyList() {
             return yList;
         }
 

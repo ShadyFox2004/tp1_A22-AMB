@@ -1,9 +1,6 @@
 package tp1;
 
+import java.util.EventListener;
 
-
-public class ActionGenerer{
-
-
-
+public interface ActionGenerer extends EventListener {
 }
