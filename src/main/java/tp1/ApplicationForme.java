@@ -13,8 +13,6 @@ import javafx.stage.Stage;
 /**
  * Contrôleur pour le Tp1
  *
-
- *
  */
 public class ApplicationForme extends Application {
 	VueForme vue;
