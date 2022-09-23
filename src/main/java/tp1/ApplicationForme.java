@@ -11,6 +11,9 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 /**
+ * @author Antoine-Matis Boudreau
+ * @author Francois Marchand
+ *
  * Contrôleur pour le Tp1
  *
  */
@@ -37,24 +40,43 @@ public class ApplicationForme extends Application {
 		stage.show();
 	}
 
+	/**
+	 * @author Francois Marchand
+	 *
+	 * associate a dialog to the buttons
+	 *
+	 * @param boutons to associate
+	 */
 	private void associeDialogAuxBoutons(Button... boutons) {
 		for (int i = 0; i < boutons.length; i++) {
 			boutons[i].setOnAction(new InnerAction());
 		}
 	}
 
+	/**
+	 * @author Antoine-Matis Boudreau
+	 *
+	 * set the button to the action add a graph
+	 *
+	 * @param bouton that will add the action
+	 */
 	private void ajouterUnGrapique(Button bouton){
 		bouton.setOnAction(new InnerActionGraph());
 	}
 
 	public class InnerActionGraph implements EventHandler {
-
 		@Override
 		public void handle(Event event) {
 			addGraph();
 		}
 	}
 
+	/**
+	 * @author Antoine-Matis Boudreau
+	 * @author Francois Marchand
+	 *
+	 * the graph that will be added
+	 */
 	private void addGraph() {
 		Grapher grapher = new Grapher();
 
@@ -67,11 +89,12 @@ public class ApplicationForme extends Application {
 		lineChart.getData().add(grapher.createGraph(new Grapher.Parameters(vue.getX(), vue.getY(), null)));
 		lineChart.setLegendVisible(false);
 
+		lineChart.setPrefSize(100,100);
+
 		vue.getCenter().getChildren().add(lineChart);
 	}
 
 	public class InnerAction implements EventHandler {
-
 		private String headerText = "Antoine-Matis Boudreau" + System.lineSeparator() + "Francois Marchand";
 		private String titre = "TP1 420-203 A22";
 

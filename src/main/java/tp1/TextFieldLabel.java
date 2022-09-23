@@ -5,8 +5,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 /**
- * Create the text field and the label.
  * @author Antoine-Matis Boudreau
+ *
+ * Create the text field and the label.
  */
 
 public class TextFieldLabel extends HBox {
@@ -22,6 +23,14 @@ public class TextFieldLabel extends HBox {
         this("");
     }
 
+
+    /**
+     * @author Antoine-Matis Boudreau
+     *
+     * merge textfield and label to simplify the code and
+     *
+     * @param s
+     */
     public TextFieldLabel(String s) {
         super();
         this.getChildren();
@@ -33,6 +42,8 @@ public class TextFieldLabel extends HBox {
     }
 
     /**
+     * @author Antoine-Matis Boudreau
+     *
      * Returns the character sequence backing the text field's content.
      * 
      * @return the character sequence backing the text field's content
@@ -41,11 +52,20 @@ public class TextFieldLabel extends HBox {
         return textField.getCharacters();
     }
 
+    /**
+     * @author Francois Marchand
+     *
+     * Returns the double in the textfield if it's a double
+     *
+     * @return the double in the textfield if it's a double
+     */
     public Double getDouble() {
         return Double.parseDouble(textField.getText());
     }
 
     /**
+     *  @author Antoine-Matis Boudreau
+     *
      * Set the new label text
      */
     public void setText(String label) {

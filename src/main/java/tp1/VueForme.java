@@ -12,7 +12,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -23,7 +26,7 @@ import java.util.stream.Stream;
  *
  * @author Antoine-Matis Boudreau
  * @author Francois Marchand
- * <p>
+ *
  * version avec les équations
  */
 public class VueForme {
@@ -79,13 +82,19 @@ public class VueForme {
     }
 
     /**
-     * @return the center pane
      * @author Antoine-Matis
+     *
+     * @return the center pane
      */
     public Pane getCenter() {
         return center;
     }
 
+    /**
+     * return a List<Number> numbers that are in column x in the right pane textfield
+     *
+     * @return List<Number> numbers that are in column x in the right pane textfield
+     */
     public List<Number> getX() {
         List<Number> x = new ArrayList<Number>();
         this.x.forEach(textFieldLabel -> x.add(textFieldLabel.getDouble()));
@@ -93,9 +102,10 @@ public class VueForme {
     }
 
     /**
-     * get the data in
+     * @return List<Number> numbers that are in column y in the right pane textfield
+     * @author Antoine-Matis Boudreau
      *
-     * @return
+     * return a List<Number> numbers that are in column y in the right pane textfield
      */
     public List<Number> getY() {
         List<Number> y = new ArrayList<Number>();
@@ -129,17 +139,15 @@ public class VueForme {
     }
 
     /**
-     * The main view is splited up into panes to avoid clogging the primary scene
-     * method.
-     * This method locates the images making the top pane and loads them into a
-     * Pane.
+     * @author Antoine-Matis Boudreau
      *
-     * @return the top pane
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method. So this methode are adding some images to the left section.
      */
     private void doMakeTop() {
         HBox top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
         top.setMinWidth(LARGEUR_MIN_SECTION_HAUT); // Francois Marchand
-        top.setMaxWidth(4000);
+        top.setMaxWidth(4000); // Francois Marchand
 
         Pattern imageExtensionPattern = Pattern.compile(".(jpeg|jpg|png)$");
         // Filter images only
@@ -165,11 +173,10 @@ public class VueForme {
     }
 
     /**
-     * The main view is splited up into panes to avoid clogging the primary scene
-     * method.
-     * This method locates creates the left pane.
+     * @author Antoine-Matis Boudreau
      *
-     * @return the top pane
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method. So this methode are adding a gridpane and some image to the left section.
      */
     private void doMakeLeft() throws FileNotFoundException {
         GridPane gridPane = new GridPane();
@@ -195,11 +202,11 @@ public class VueForme {
     }
 
     /**
-     * The main view is splited up into panes to avoid clogging the primary scene
-     * method.
-     * This method locates creates the right VBox.
+     * @author Antoine-Matis Boudreau
+     * @author Francois Marchand
      *
-     * @return the right VBox
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method. So this methode are adding a Vbox, label, gridpane and some button to the right section.
      */
     private void doMakeRight() {
         x = new ArrayList<>(NUMBER_OF_DATA);
@@ -256,11 +263,11 @@ public class VueForme {
 
 
     /**
-     * The main view is splited up into panes to avoid clogging the primary scene
-     * method.
-     * This method locates creates the Bottom HBox.
+     * @author Antoine-Matis Boudreau
+     * @author Francois Marchand
      *
-     * @return the bottom HBox
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method. So this methode are adding some Hbox and button to the bottom section.
      */
     private void doMakeBottom() {
         HBox bottom = new HBox();
@@ -293,6 +300,16 @@ public class VueForme {
         this.center = new TilePane();
     }
 
+    /**
+     * @author Francois Marchand
+     *
+     * set the pref width, set the min width and set the max width of the button received
+     *
+     * @param boutton the button gona set the width
+     * @param pref set the pref width of the button
+     * @param min set the min width of the button
+     * @param max set the max width of the button
+     */
     private void setWidth(Button boutton, double pref, double min, double max) {
         boutton.setPrefWidth(pref);
         boutton.setMinWidth(min);
