@@ -1,27 +1,38 @@
 package tp1;
 
-
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
  * Vue pour le Tp1 sur les équations
  *
- * @author Martin Simoneau
+ * @author Antoine-Matis Boudreau
+ * @author Francois Marchand
+ *
  * version avec les équations
  */
 public class VueForme {
 
     private final static Border BORDER = new Border(
-            new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, null, null));
+            new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, new CornerRadii(23), BorderWidths.DEFAULT, null));
     public static final int NUMBER_OF_DATA = 5;
     public static final int LARGEUR_SCENE = 600;
     public static final int HATEUR_SCENE = 500;
@@ -36,18 +47,90 @@ public class VueForme {
     public static final int ESPACE_ENTRE_IMAGE_HAUT = 5;
     public static final double LARGEUR_MIN_SECTION_HAUT = 200.0;
     private static final String TOP_IMAGE_PATH = "images fournies/image pour le dessus";
+    private Button genere = new Button("Générer");
+    private Button reinitialiser = new Button("Réinitialiser");
+    private Button quitter = new Button("Quitter");
+    private Button boutonAjouterGraph = new Button("Ajoutez un graphique");
+    private Button boutonEffacerGraph = new Button("Effacer les graphiques");
+    private Pane top;
+    private Pane right;
+    private Pane center;
+    private Pane left;
+    private Pane bottom;
+    private List<TextFieldLabel> x;
+    private List<TextFieldLabel> y;
+
+
+    public Button getBoutonGenere() {
+        return this.genere;
+    }
+
+    public Button getReinitialiser() {
+        return this.reinitialiser;
+    }
+
+    public Button getQuitter() {
+        return this.quitter;
+    }
+
+    public Button getBoutonAjouterGraph() {
+        return this.boutonAjouterGraph;
+    }
+
+    public Button getBoutonEffacerGraph() {
+        return this.boutonEffacerGraph;
+    }
+
+    /**
+     * @author Antoine-Matis
+     *
+     * @return the center pane
+     */
+    public Pane getCenter() {
+        return center;
+    }
+
+    /**
+     * return a List<Number> numbers that are in column x in the right pane textfield
+     *
+     * @return List<Number> numbers that are in column x in the right pane textfield
+     */
+    public List<Number> getX() {
+        List<Number> x = new ArrayList<Number>();
+        this.x.forEach(textFieldLabel -> x.add(textFieldLabel.getDouble()));
+        return x;
+    }
+
+    /**
+     * @return List<Number> numbers that are in column y in the right pane textfield
+     * @author Antoine-Matis Boudreau
+     *
+     * return a List<Number> numbers that are in column y in the right pane textfield
+     */
+    public List<Number> getY() {
+        List<Number> y = new ArrayList<Number>();
+        this.y.forEach(textFieldLabel -> y.add(textFieldLabel.getDouble()));
+        return y;
+    }
 
 
     public Scene getScene() throws IOException {
         BorderPane root = new BorderPane();
-        Pane top = doMakeTop();
-        Pane left = doMakeLeft();
+
+        doMakeTop();
+        doMakeLeft();
+        doMakeRight();
+        doMakeBottom();
+        doMakeCenter();
 
         root.setLeft(left);
-
         root.setTop(top);
+        root.setRight(right);
+        root.setBottom(bottom);
+        root.setCenter(center);
 
         Scene scene = new Scene(root, LARGEUR_SCENE, HATEUR_SCENE);
+
         return scene;
     }
 
@@ -56,13 +139,15 @@ public class VueForme {
     }
 
     /**
-     * The main view is splited up into panes to avoid clogging the primary scene method.
-     * This method locates the images making the top pane and loads them into a Pane.
+     * @author Antoine-Matis Boudreau
      *
-     * @return the top pane
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method. So this methode are adding some images to the left section.
      */
-    private Pane doMakeTop() {
-        Pane top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
+    private void doMakeTop() {
+        HBox top = new HBox(ESPACE_ENTRE_IMAGE_HAUT);
+        top.setMinWidth(LARGEUR_MIN_SECTION_HAUT); // Francois Marchand
+        top.setMaxWidth(4000); // Francois Marchand
 
         Pattern imageExtensionPattern = Pattern.compile(".(jpeg|jpg|png)$");
         // Filter images only
@@ -71,9 +156,10 @@ public class VueForme {
 
         assert directory != null;
 
-        Stream<File> images = Stream.of(directory.listFiles(file -> imageExtensionPattern.matcher(file.getName()).find()));
+        Stream<File> images = Stream
+                .of(directory.listFiles(file -> imageExtensionPattern.matcher(file.getName()).find()));
 
-        assert images != null; //is everything really ok?
+        assert images != null; // is everything really ok?
 
         images.forEach(image -> { // If it is alright, we proceed!
             try {
@@ -83,44 +169,150 @@ public class VueForme {
             }
         });
 
-        return top;
+        this.top = top;
     }
 
     /**
-     * The main view is splited up into panes to avoid clogging the primary scene method.
-     * This method locates creates the left pane.
+     * @author Antoine-Matis Boudreau
      *
-     * @return the top pane
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method. So this methode are adding a gridpane and some image to the left section.
      */
-    private Pane doMakeLeft() throws FileNotFoundException {
+    private void doMakeLeft() throws FileNotFoundException {
         GridPane gridPane = new GridPane();
 
         gridPane.setMaxSize(100, 250);
 
         ImageView image1 = loadImage("images fournies/mage pour le côté gauche/science1.png", 50, 50);
-        GridPane.setConstraints(image1, 0, 0, 1, 1);
+        gridPane.add(image1, 0, 0, 1, 1);
 
         ImageView image2 = loadImage("images fournies/mage pour le côté gauche/science2.png", 50, 50);
-        GridPane.setConstraints(image2, 0, 1, 1, 1);
+        gridPane.add(image2, 0, 1, 1, 1);
 
         ImageView image3 = loadImage("images fournies/mage pour le côté gauche/science3.png", 50, 100);
-        GridPane.setConstraints(image3, 1, 0, 1, 2);
+        gridPane.add(image3, 1, 0, 1, 2);
 
         ImageView image4 = loadImage("images fournies/mage pour le côté gauche/science5.png", 100, 50);
-        GridPane.setConstraints(image4, 0, 2, 2, 1);
+        gridPane.add(image4, 0, 2, 2, 1);
 
         ImageView image5 = loadImage("images fournies/mage pour le côté gauche/science4.png", 100, 100);
-        GridPane.setConstraints(image5, 0, 3, 2, 2);
+        gridPane.add(image5, 0, 3, 2, 2);
 
-        gridPane.getChildren().addAll(image1, image2, image3, image4, image5);
-
-        return gridPane;
+        this.left = gridPane;
     }
 
-    private Pane doMakeRight() {
+    /**
+     * @author Antoine-Matis Boudreau
+     * @author Francois Marchand
+     *
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method. So this methode are adding a Vbox, label, gridpane and some button to the right section.
+     */
+    private void doMakeRight() {
+        x = new ArrayList<>(NUMBER_OF_DATA);
+        y = new ArrayList<>(NUMBER_OF_DATA);
+        Label auteurs = new Label("Auteurs");
+        TextArea nomAuteurs1 = new TextArea("Antoine-Matis Boudreau" + System.lineSeparator() + "Francois Marchand");
+
+        VBox right = new VBox(20);
+        right.setAlignment(Pos.CENTER);
+
+        right.getChildren().addAll(auteurs, nomAuteurs1);
+        nomAuteurs1.setPrefSize(100, 70);
+        nomAuteurs1.setEditable(false);
+
+        right.setBorder(new Border(
+                new BorderStroke(Color.TRANSPARENT, BorderStrokeStyle.SOLID, null, new BorderWidths(1, 20, 1, 20), null)));
+
         GridPane gridPane = new GridPane();
 
-        return gridPane;
+        gridPane.setHgap(EXPACEMENT_ENTRE_X_Y);
+        gridPane.setBorder(BORDER);
+
+        right.setBackground(Background.fill(Color.DARKGRAY));
+        right.getChildren().add(gridPane);
+
+
+        for (int i = 0; i < NUMBER_OF_DATA; i++) {
+            x.add(i, new TextFieldLabel("x" + i + "  "));
+            x.get(i).getTextField().setMinWidth(LARGEUR_MIN_TEXTFIELD_DONNEES);
+            GridPane.setConstraints(x.get(i), 0, i);
+            x.get(i).setPadding(new Insets(0, 5, 5, 5));
+            x.get(i).getTextField().setPrefWidth(35);
+
+
+            y.add(i, new TextFieldLabel("y" + i + "  "));
+            y.get(i).getTextField().setMinWidth(LARGEUR_MIN_TEXTFIELD_DONNEES);
+            GridPane.setConstraints(y.get(i), 1, i);
+            y.get(i).setPadding(new Insets(0, 5, 5, 5));
+            y.get(i).getTextField().setPrefWidth(35);
+
+            gridPane.getChildren().addAll(x.get(i), y.get(i));
+        }
+
+        GridPane.setHalignment(boutonAjouterGraph, HPos.CENTER);
+        GridPane.setHalignment(boutonEffacerGraph, HPos.CENTER);
+
+        gridPane.add(boutonAjouterGraph, 0, NUMBER_OF_DATA, 2, 1);
+        gridPane.add(boutonEffacerGraph, 0, NUMBER_OF_DATA + 1, 2, 1);
+
+        gridPane.setPadding(new Insets(20, 10, 20, 20));
+
+        this.right = right;
     }
 
+
+    /**
+     * @author Antoine-Matis Boudreau
+     * @author Francois Marchand
+     *
+     * The main view is splited up into panes to avoid clogging the primary scene
+     * method. So this methode are adding some Hbox and button to the bottom section.
+     */
+    private void doMakeBottom() {
+        HBox bottom = new HBox();
+
+        setWidth(genere, 125, 125, 500);
+
+        setWidth(reinitialiser, 125, 125, 500);
+
+        setWidth(quitter, 65, 65, 400);
+
+        bottom.getChildren().addAll(genere, reinitialiser, quitter);
+
+        HBox.setHgrow(genere, Priority.ALWAYS);
+        HBox.setHgrow(reinitialiser, Priority.ALWAYS);
+        HBox.setHgrow(quitter, Priority.SOMETIMES);
+
+        bottom.setAlignment(Pos.BOTTOM_CENTER);
+        bottom.setSpacing(ESPACE_ENTRE_BOUTONS_BAS);
+
+        Border bottomBorder = new Border(
+                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, BorderWidths.DEFAULT, null));
+
+        bottom.setBorder(bottomBorder);
+
+        this.bottom = bottom;
+    }
+
+
+    private void doMakeCenter() {
+        this.center = new TilePane();
+    }
+
+    /**
+     * @author Francois Marchand
+     *
+     * set the pref width, set the min width and set the max width of the button received
+     *
+     * @param boutton the button gona set the width
+     * @param pref set the pref width of the button
+     * @param min set the min width of the button
+     * @param max set the max width of the button
+     */
+    private void setWidth(Button boutton, double pref, double min, double max) {
+        boutton.setPrefWidth(pref);
+        boutton.setMinWidth(min);
+        boutton.setMaxWidth(max);
+    }
 }
